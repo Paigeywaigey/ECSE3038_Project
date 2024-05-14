@@ -36,7 +36,7 @@ def new_json_encoder(obj):
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
 
-client = motor.motor_asyncio.AsyncIOMotorClient("mongodb+srv://IOT_CLASS:iotclass@cluster0.irzkjxq.mongodb.net/?retryWrites=true&w=majority")
+client = motor.motor_asyncio.AsyncIOMotorClient("mongodb+srv://paigewanliss:AbCdEfG@cluster0.b6gq5g3.mongodb.net/?retryWrites=true&w=majority")
 db = client.ECSE3038_Project
 settings = db['settings']
 updates = db['data']
