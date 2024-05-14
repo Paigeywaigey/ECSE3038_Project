@@ -6,7 +6,7 @@
 #include <DallasTemperature.h>
 #include "env.h" 
 
-#define endpoint "project-2024-he7v.onrender.com"
+#define endpoint "ecse3038-project-bcpp.onrender.com"
 
 #define fanPin 23
 #define lightPin 22
