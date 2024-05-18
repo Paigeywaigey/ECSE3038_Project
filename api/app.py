@@ -9,10 +9,7 @@ from datetime import datetime, timedelta
 from geopy.geocoders import Nominatim
 from fastapi.middleware.cors import CORSMiddleware
 
-
-
 app = FastAPI()
-
 
 origins = [
     "https://simple-smart-hub-client.netlify.app",
@@ -28,20 +25,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#def new_json_encoder(obj):
+   # if isinstance(obj, ObjectId):
+      #  return str(obj)
+    #raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
+#client = motor.motor_asyncio.AsyncIOMotorClient("mongodb+srv://paigewanliss:AbCdEfG@cluster0.b6gq5g3.mongodb.net/?retryWrites=true&w=majority")
 
-def new_json_encoder(obj):
-    if isinstance(obj, ObjectId):
-        return str(obj)
-    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+class Database:
+    def _init_(self):
+         self.connection = DatabaseConnection()
 
+    async def find(self, collection, filter_params=None):
+        result = await self.connection.query(collection, filter_params)
+        return result
 
-client = motor.motor_asyncio.AsyncIOMotorClient("mongodb+srv://paigewanliss:AbCdEfG@cluster0.b6gq5g3.mongodb.net/?retryWrites=true&w=majority")
-db = client.ECSE3038_Project
-settings = db['settings']
-updates = db['data']
+    async def insert_one(self, collection, data):
+       result = await self.connection[collection].insert_one(data)
+       return str(result.inserted_id)
 
+    async def update_one(self, collection, filter_params, update_params):
+        await self.connection.update(collection, filter_params, update_params)
 
+db = Database()
+
+#db = client.ECSE3038_Project
+#settings = db['settings']
+#updates = db['data']
 
 regex = re.compile(r'((?P<hours>\d+?)h)?((?P<minutes>\d+?)m)?((?P<seconds>\d+?)s)?')
 
@@ -55,8 +65,6 @@ def parse_time(time_str):
         if param:
             time_params[name] = int(param)
     return timedelta(**time_params)
-
-
 
 
 def get_sunset():
@@ -80,12 +88,9 @@ def get_current_time():
     return datetime.strptime(str(now_time),"%H:%M:%S.%f")
 
 
-
 @app.get("/")
 async def home():
     return {"message": "ECSE3038 - Project"}
-
-
 
 @app.get('/graph')
 async def graph(request: Request):
@@ -110,7 +115,6 @@ async def graph(request: Request):
         })
 
     return data_reading
-
 
 @app.put('/settings')
 async def put_parameters(request: Request):
@@ -147,7 +151,6 @@ async def put_parameters(request: Request):
     return new_obj
 
 
-
 @app.post("/info")
 async def toggle(request: Request):
     state = await request.json()
@@ -180,9 +183,7 @@ async def toggle(request: Request):
 
     return new_obj
 
-
-
-#retreves last entry
+#retrieves last entry
 @app.get("/state")
 async def get_state():
     last_entry = await updates.find().sort('_id', -1).limit(1).to_list(1)
