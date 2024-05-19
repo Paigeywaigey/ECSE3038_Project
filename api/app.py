@@ -8,6 +8,7 @@ from fastapi import FastAPI, Request
 from datetime import datetime, timedelta
 from geopy.geocoders import Nominatim
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 app = FastAPI()
 
@@ -29,8 +30,9 @@ def new_json_encoder(obj):
     if isinstance(obj, ObjectId):
         return str(obj)
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
-
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URL)
+    
+database_url = os.environ.get('MONGO_URL')
+client = motor.motor_asyncio.AsyncIOMotorClient(database_url)
 db = client.ECSE3038_Project
 settings = db['settings']
 updates = db['data']
