@@ -3,15 +3,15 @@ import requests
 import datetime
 import motor.motor_asyncio
 import pytz
+import os
 from bson import ObjectId
 from fastapi import FastAPI, Request
 from datetime import datetime, timedelta
 from geopy.geocoders import Nominatim
 from fastapi.middleware.cors import CORSMiddleware
-import os
+
 
 app = FastAPI()
-
 origins = [
     "https://simple-smart-hub-client.netlify.app",
     "https://ecse3038-project-bcpp.onrender.com"
@@ -25,12 +25,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-def new_json_encoder(obj):
-    if isinstance(obj, ObjectId):
-        return str(obj)
-    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
-    
 database_url = os.environ.get('MONGO_URL')
 client = motor.motor_asyncio.AsyncIOMotorClient(database_url)
 db = client.ECSE3038_Project
