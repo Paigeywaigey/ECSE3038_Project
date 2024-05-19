@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 origins = [
     "https://simple-smart-hub-client.netlify.app",
-    "https://ecse3038-project-bcpp.onrender.com"
+    "https://project-2024-he7v.onrender.com"
     "http://127.0.0.1:8000"
 ]
 
