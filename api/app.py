@@ -25,33 +25,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#def new_json_encoder(obj):
-   # if isinstance(obj, ObjectId):
-      #  return str(obj)
-    #raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+def new_json_encoder(obj):
+    if isinstance(obj, ObjectId):
+        return str(obj)
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
-#client = motor.motor_asyncio.AsyncIOMotorClient("mongodb+srv://paigewanliss:AbCdEfG@cluster0.b6gq5g3.mongodb.net/?retryWrites=true&w=majority")
-
-class Database:
-    def _init_(self):
-         self.connection = DatabaseConnection()
-
-    async def find(self, collection, filter_params=None):
-        result = await self.connection.query(collection, filter_params)
-        return result
-
-    async def insert_one(self, collection, data):
-       result = await self.connection[collection].insert_one(data)
-       return str(result.inserted_id)
-
-    async def update_one(self, collection, filter_params, update_params):
-        await self.connection.update(collection, filter_params, update_params)
-
-db = Database()
-
-#db = client.ECSE3038_Project
-#settings = db['settings']
-#updates = db['data']
+client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URL)
+db = client.ECSE3038_Project
+settings = db['settings']
+updates = db['data']
 
 regex = re.compile(r'((?P<hours>\d+?)h)?((?P<minutes>\d+?)m)?((?P<seconds>\d+?)s)?')
 
